@@ -14,7 +14,11 @@ namespace CrewNodeSwitcherPlugin.Utils
 
             // Check if we can create a valid session for this plugin
             Models.ApiModel.Authorize authorization = QueryApi("authorize", ApiType.Authorize);
-            if (authorization == null) return false;
+            if (authorization == null)
+            {
+                Console.WriteLine("Unable to authorize.");
+                return false;
+            }
 
             Console.WriteLine("alright somehow we got a session ID: " + authorization.sessionId);
             return true;
@@ -24,10 +28,10 @@ namespace CrewNodeSwitcherPlugin.Utils
         {
             using (WebClient c = new WebClient())
             {
-                Console.WriteLine("Added API Key as '" + Config.Get().apiKey + "'");
-                c.Headers.Add("Authorization", Config.Get().apiKey);
-                Console.WriteLine("Querying: " + String.Join('/', ApiUrl, apiPath));
+                c.Headers.Add("Authorization", String.Format("CrewNode {0}", Config.Get().apiKey));
                 string resp = c.DownloadString(String.Join('/', ApiUrl, apiPath));
+
+                if (resp.Contains("DENIED")) return null;
                 switch (type)
                 {
                     case ApiType.Authorize:
@@ -40,7 +44,6 @@ namespace CrewNodeSwitcherPlugin.Utils
                         throw new Exception("Invalid ApiType specified for API Query in CrewNodeSwitcher.");
                 }
             }
-            return null;
         }
 
     }
