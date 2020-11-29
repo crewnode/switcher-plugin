@@ -16,11 +16,11 @@ namespace CrewNodeSwitcherPlugin.Utils
             Models.ApiModel.Authorize authorization = QueryApi("authorize", ApiType.Authorize);
             if (authorization == null)
             {
-                Console.WriteLine("Unable to authorize.");
+                Console.WriteLine("[CN__Switcher] Unable to authorize!");
                 return false;
             }
 
-            Console.WriteLine("alright somehow we got a session ID: " + authorization.sessionId);
+            Console.WriteLine($"[CN__Switcher] Session ID instantiated for Switcher: {authorization.sessionId}");
             return true;
         }
 
@@ -37,8 +37,10 @@ namespace CrewNodeSwitcherPlugin.Utils
                     case ApiType.Authorize:
                         return JsonConvert.DeserializeObject<Models.ApiModel.Authorize>(resp);
                     case ApiType.Push:
+                        // TODO: Implement
                         return null;
                     case ApiType.Pull:
+                        // TODO: Implement
                         return null;
                     default:
                         throw new Exception("Invalid ApiType specified for API Query in CrewNodeSwitcher.");
